@@ -1,4 +1,5 @@
 require 'rack/lobster'
+require 'socket'
 
 map '/health' do
   health = proc do |env|
@@ -22,6 +23,14 @@ map '/headers' do
     ]]
   end
   run headers
+end
+
+map '/me' do
+  hostname = proc do |env|
+    hn = Socket.gethostname
+    [ 200, { "Content-Type" => "text/plain" }, [ "Hostname is #{hn}" ]]
+  end
+  run hostname
 end
 
 map '/' do
