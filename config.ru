@@ -1,5 +1,6 @@
 require 'rack/lobster'
 require 'socket'
+require 'json'
 
 map '/health' do
   health = proc do |env|
@@ -28,7 +29,8 @@ end
 map '/me' do
   hostname = proc do |env|
     hn = Socket.gethostname
-    [ 200, { "Content-Type" => "text/plain" }, [ "Hostname is #{hn}" ]]
+    data = { "Hostname" => hn }
+    [ 200, { "Content-Type" => "application/json" }, [ JSON.generate(data) ]]
   end
   run hostname
 end
